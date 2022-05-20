@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<!-- Многочлены одной переменной с целыми коэффициентами: x^234-3x+17x^2+50 -->
+<head>
+	<meta charset="UTF-8">
+	<title>?))??)?)</title>
+	<style type="text/css">
+		/* default */
+		html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video, input, textarea {
+		    margin: 0;
+		    padding: 0;
+		    border: 0;
+		    font: inherit;
+		    vertical-align: baseline;
+		}
+		/*my styles*/
+		html, body {
+			height: 80%;
+			width: 100%;
+		}
+		body {
+			display: grid;
+			padding-top: 150px;
+			grid-template-columns: 1fr 1fr;
+			grid-gap: 15px;
+		}
+		div {
+			border: 1px solid orange;
+			border-radius: 12px;
+			padding: 15px;
+		}
+		textarea {
+			width: 	90%;
+			border: 2px solid red;
+			border-radius: 2px;
+		}
+		#submit-button {
+			color:#dadada;
+			font-weight: 700;
+			width: 14em;
+			height: 4em;
+			background-color: #e96756a2;
+			border: none;
+		}
+
+		#submit-button:hover {
+			border: 4px solid #ff1e00a2;
+			background-color: #e9675600;
+			color:rgb(247, 183, 183);
+			transition: all 0.3s;
+		}
+
+	</style>
+</head>
+<body>
+	<div>
+		<div class="input">
+			<p>Введите выражение</p>
+			<textarea name="text" rows="10" placeholder="Формула"></textarea>
+			<button type="button" id="submit-button">Отправить!</button>
+		</div>
+	</div>
+	<div id="output">
+		
+	</div>
+
+</body>
+<script type="text/javascript">
+	let output = document.getElementById('output');
+	
+	let button = document.querySelector("button");
+		button.addEventListener("click", function() {
+			console.log("Кнопка работает!");
+			let formula = document.querySelector("textarea").value;
+			solve(formula);
+		});
+
+	function solve(formula) {
+		let str = formula;
+		let digits = ['0','1','2','3','4','5','6','7','8','9'];
+		let operations = ['+', '-'];
+		let d = 0
+		function Pov() {
+			if(str == 0 && d == 0){
+				let e = new Error('0 is not a polinome');
+				throw e;
+			}
+			Element();
+			Tail();
+		}
+		function Element() {
+			//console.log('Elem work ' + str)
+			if(str[0] in digits) {
+				//console.log('first digit ' + str)
+				Number();
+				Expression();
+			} else if (str[0] == 'x') {
+				//console.log('first x ' + str)
+				Expression();
+			} else {
+				let e = new Error(formula[formula.indexOf(str[0], d-1)] + ' in pos ' + (d+1) + " expected x or digit");
+				throw e;
+			}
+		}
+		function Expression() {
+			//console.log('Expression work ' + str)
+			if(str[0] == 'x'){
+				Variable();
+				Pow();
+			}
+		}
+		function Pow() {
+			//console.log('Pow work ' + str)
+			if(str[0] == '^'){
+				str = str.slice(1);
+				d += 1
+				Number();
+			} 
+		}
+		function Tail() {
+			//console.log('Tail work ' + str[0])
+			if(str[0] == operations[0] || str[0] == operations[1]){
+				Operation();
+				Pov();
+			} else if(str[0] != undefined) {
+				let e = new Error(formula[formula.indexOf(str[0], d-1)] + ' in pos ' + (d+1) + " expected operation");
+				throw e;
+			}
+		}
+		function Number() {
+			//console.log('Num work' + str)
+			if(str[0] in digits){
+				Digit();
+				Nr();
+			} else {
+				let e = new Error(formula[formula.indexOf(str[0], d-1)] + ' in pos ' + (d+1) + " expected digit");
+				throw e;
+			}
+		}
+		function Nr() {
+			//console.log('Nr work ' + str)
+			if(str[0] in digits){
+				Number();
+			} else if (str[0] == '.' || str[0] == '/' || str[0] == ','){
+				let e = new Error(formula[formula.indexOf(str[0], d-1)] + ' in pos ' + (d+1) + " expected digit");
+				throw e;
+			}
+		}
+		function Digit() {
+			if (str[0] in digits) {
+				str = str.slice(1);
+				d += 1
+			} else {
+				let e = new Error(formula[formula.indexOf(str[0], d-1)] + ' in pos ' + (d+1) + " expected digit");
+				throw e;
+
+			}
+		}
+		function Operation() {
+			if (str[0] == operations[0] || str[0] == operations[1]) {
+				str = str.slice(1);
+				d += 1
+			} else {
+				let e = new Error(formula[formula.indexOf(str[0], d-1)] + ' in pos ' + (d+1) + " expected + or -");
+				throw e;
+			}
+		}
+		function Variable() {
+			if (str[0] == 'x') {
+				str = str.slice(1);
+				d += 1
+			} else {
+				let e = new Error(formula[formula.indexOf(str[0], d-1)] + ' in pos ' + (d+1) + " expected x");
+				throw e;
+			}
+		}
+		try {
+			Pov(str);
+			output.textContent="Well-done!";
+		} catch (e) {
+			output.textContent=e.message;
+			console.log(e.message)
+		}
+	};
+</script>
+</html>
